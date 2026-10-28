@@ -1017,7 +1017,7 @@ img {
         <h2>Published on Medium.</h2>
         <p>
           Articoli selezionati dal profilo @auf2026.
-        </p><button id="loadMoreBtn" class="load-more">
+        <button id="loadMoreBtn" class="load-more" type="button">
   Load more publications ↓
 </button>
       </div>
@@ -1162,8 +1162,275 @@ img {
 
 
   <script>
-    /* PARTE 3: JAVASCRIPT AUF2026 */
+    /* ==========================================
+   AUF2026 — LOAD MORE PUBLICATIONS
+========================================== */
+
+(() => {
+  const list = document.getElementById("articleList");
+  const button = document.getElementById("loadMoreBtn");
+
+  if (!list || !button) return;
+
+  // Articoli già presenti nell'HTML.
+  const initialArticles = Array.from(
+    list.querySelectorAll(".publication")
+  );
+
+  // Archivio aggiuntivo: inserisci qui gli altri articoli REALI.
+  const moreArticles = [
+    // Esempio:
+    // {
+    //   category: "MATHEMATICS · COMPUTATION",
+    //   title: "Titolo del tuo articolo",
+    //   description: "Descrizione del tuo articolo.",
+    //   url: "https://medium.com/@auf2026/URL-REALE"
+    // }
+  ];
+
+  const batchSize = 3;
+  let nextIndex = 0;
+
+  function createCard(article) {
+    const card = document.createElement("article");
+    card.className = "publication";
+
+    const category = document.createElement("p");
+    category.className = "publication-category";
+    category.textContent = article.category;
+
+    const title = document.createElement("h3");
+    title.textContent = article.title;
+
+    const description = document.createElement("p");
+    description.textContent = article.description;
+
+    const link = document.createElement("a");
+    link.href = article.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Read original article ↗";
+
+    card.append(category, title, description, link);
+
+    return card;
+  }
+
+  function loadMore() {
+    const batch = moreArticles.slice(
+      nextIndex,
+      nextIndex + batchSize
+    );
+
+    batch.forEach(article => {
+      list.appendChild(createCard(article));
+    });
+
+    nextIndex += batch.length;
+
+    // Nascondi il pulsante quando non restano articoli.
+    button.hidden = nextIndex >= moreArticles.length;
+  }
+
+  // Mostra il pulsante solo se esistono articoli aggiuntivi.
+  button.hidden = moreArticles.length === 0;
+
+  button.addEventListener("click", loadMore);
+})();
+
+
   </script>
+
+<script>
+(() => {
+  "use strict";
+
+  const FEED = "https://medium.com/feed/@auf2026";
+  const PROXY = "https://proxy.cors.dev/";
+
+  const list = document.getElementById("articleList");
+  const button = document.getElementById("loadMoreBtn");
+
+  if (!list || !button) return;
+
+  const originalArticles = [...list.querySelectorAll(".publication")];
+  const originalHTML = list.innerHTML;
+
+  let articles = [];
+  let visible = 0;
+  const batch = 3;
+
+  button.disabled = true;
+  button.textContent = "Loading publications…";
+
+  function element(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    el.textContent = text || "";
+    return el;
+  }
+
+  async function getFeed() {
+    const response = await fetch(PROXY + FEED, {
+      credentials: "omit"
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        response.headers.get("X-Cors-Error") ||
+        `HTTP ${response.status}`
+      );
+    }
+
+    const xml = new DOMParser().parseFromString(
+      await response.text(),
+      "application/xml"
+    );
+
+    if (xml.querySelector("parsererror")) {
+      throw new Error("Invalid RSS feed");
+    }
+
+    return [...xml.querySelectorAll("item, entry")]
+      .map(item => {
+        const read = selector =>
+          item.querySelector(selector)?.textContent.trim() || "";
+
+        const linkNode =
+          item.querySelector('link[rel="alternate"]') ||
+          item.querySelector("link");
+
+        let url = linkNode?.getAttribute("href") ||
+                  linkNode?.textContent.trim() || "";
+
+        try {
+          const parsed = new URL(url);
+          if (
+            parsed.protocol !== "https:" ||
+            parsed.hostname !== "medium.com"
+          ) return null;
+
+          url = parsed.href;
+        } catch {
+          return null;
+        }
+
+        const rawSummary =
+          read("description") ||
+          read("summary") ||
+          read("content");
+
+        const summary = new DOMParser()
+          .parseFromString(rawSummary, "text/html")
+          .body.textContent
+          .replace(/\s+/g, " ")
+          .trim();
+
+        const categories = [...item.querySelectorAll("category")]
+          .map(node => node.textContent.trim())
+          .filter(Boolean);
+
+        return {
+          title: read("title") || "Untitled",
+          link: url,
+          summary,
+          categories
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function makeArticle(item) {
+    const article = element("article", "publication");
+
+    article.append(
+      element(
+        "p",
+        "publication-category",
+        item.categories.slice(0, 3).join(" · ").toUpperCase()
+          || "AUF2026 · PUBLICATION"
+      ),
+      element("h3", "", item.title),
+      element(
+        "p",
+        "",
+        item.summary.slice(0, 350) ||
+          "Read the original publication on Medium."
+      )
+    );
+
+    const link = element("a", "", "Read original article ↗");
+    link.href = item.link;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    article.append(link);
+
+    return article;
+  }
+
+  function showMore() {
+    const next = articles.slice(visible, visible + batch);
+
+    next.forEach(item => list.append(makeArticle(item)));
+
+    visible += next.length;
+    button.hidden = visible >= articles.length;
+  }
+
+  async function init() {
+    try {
+      const feedArticles = await getFeed();
+
+      if (!feedArticles.length) {
+        throw new Error("No articles found in Medium RSS");
+      }
+
+      // Usa Medium come fonte principale e impedisce
+      // duplicati rispetto agli articoli già presenti.
+      const knownLinks = new Set(
+        originalArticles.map(article =>
+          article.querySelector("a")?.href
+        ).filter(Boolean)
+      );
+
+      articles = feedArticles.filter(
+        item => !knownLinks.has(item.link)
+      );
+
+      if (!articles.length) {
+        button.hidden = true;
+        return;
+      }
+
+      button.disabled = false;
+      button.textContent = "Load more publications ↓";
+      showMore();
+
+    } catch (error) {
+      console.error("AUF2026 — Medium RSS error:", error);
+
+      // Non elimina gli articoli originali se il feed fallisce.
+      list.innerHTML = originalHTML;
+      button.disabled = true;
+      button.textContent = "Medium feed unavailable";
+      button.hidden = false;
+      button.title =
+        "Apri il profilo Medium per consultare le pubblicazioni.";
+
+      button.onclick = () => {
+        window.open(
+          "https://medium.com/@auf2026",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      };
+    }
+  }
+
+  button.addEventListener("click", showMore);
+  init();
+})();
+</script>
 
 </body>
 </html>
