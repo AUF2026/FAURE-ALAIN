@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b12">
+
+  <title>AUF2026 — Alain Faure | Singlepoint Mind</title>
+
+  <meta name="description"
+    content="Alain Faure — AUF2026. Faure Framework, AOS Kernel,
+    matematica, fisica teorica e sistemi deterministici.">
+
+  <style>
+    /* ==========================================
+   AUF2026 — SINGLEPOINT MIND
+   PARTE 2 · DESIGN SYSTEM
+========================================== */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #080b12;
+  --bg-secondary: #0c111c;
+  --surface: #101725;
+  --surface-hover: #151f30;
+
+  --text: #f0f4fc;
+  --muted: #8c9ab2;
+  --subtle: #596982;
+
+  --accent: #5a8cff;
+  --accent-bright: #83aaff;
+  --accent-soft: rgba(90, 140, 255, 0.12);
+
+  --border: rgba(150, 177, 224, 0.15);
+  --border-strong: rgba(150, 177, 224, 0.3);
+
+  --max-width: 1180px;
+  --header-height: 78px;
+
+  --font-ui: Inter, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+
+  --font-editorial: Georgia, "Times New Roman", serif;
+
+  --transition: 220ms ease;
+}
+
+/* RESET */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-height) + 20px);
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(120, 155, 220, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(120, 155, 220, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 44px 44px;
+}
+
+::selection {
+  background: rgba(90, 140, 255, 0.35);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 5px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* HEADER */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  min-height: var(--header-height);
+  width: 100%;
+  padding: 14px max(5%, calc((100% - 1320px) / 2));
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+
+  background: rgba(8, 11, 18, 0.88);
+  border-bottom: 1px solid var(--border);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+
+.brand-symbol {
+  display: grid;
+  place-items: center;
+
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+
+  background: var(--accent-soft);
+  color: var(--accent-bright);
+
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.brand-muted {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.site-header nav a {
+  color: var(--muted);
+  font-size: 0.85rem;
+  transition: color var(--transition);
+}
+
+.site-header nav a:hover {
+  color: var(--accent-bright);
+}
+
+.medium-link {
+  padding: 9px 16px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+
+  color: var(--text);
+  font-size: 0.83rem;
+  font-weight: 600;
+
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.medium-link:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* HERO */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+
+  max-width: var(--max-width);
+  min-height: 610px;
+
+  margin: 0 auto;
+  padding: 125px 32px 115px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  top: 70px;
+  right: 4%;
+  width: 340px;
+  height: 340px;
+
+  border: 1px solid rgba(90, 140, 255, 0.16);
+  border-radius: 50%;
+
+  box-shadow:
+    0 0 0 42px rgba(90, 140, 255, 0.025),
+    0 0 0 84px rgba(90, 140, 255, 0.02);
+
+  pointer-events: none;
+}
+
+.overline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-bottom: 24px;
+
+  color: var(--accent-bright);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.5;
+}
+
+.overline::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.hero h1 {
+  max-width: 900px;
+
+  font-size: clamp(3.8rem, 9vw, 7.8rem);
+  font-weight: 700;
+  line-height: 0.99;
+  letter-spacing: -0.075em;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.hero h2 {
+  margin-top: 26px;
+
+  color: #c4d0e5;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+}
+
+.hero-description {
+  max-width: 610px;
+  margin-top: 25px;
+
+  color: var(--muted);
+  font-size: 1.08rem;
+  line-height: 1.9;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 28px;
+}
+
+.hero-tags span {
+  padding: 6px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 5px;
+
+  background: rgba(255, 255, 255, 0.015);
+  color: #aebed8;
+
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  margin-top: 38px;
+}
+
+.button-primary,
+.button-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  min-height: 46px;
+  padding: 12px 19px;
+
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+
+  font-size: 0.84rem;
+  font-weight: 600;
+
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.button-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #07101f;
+}
+
+.button-primary:hover {
+  background: var(--accent-bright);
+  transform: translateY(-2px);
+}
+
+.button-secondary {
+  background: transparent;
+  color: var(--text);
+}
+
+.button-secondary:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* SEZIONI */
+
+.research,
+.publications {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 100px 32px;
+}
+
+.research > h2,
+.section-heading h2,
+.about h2 {
+  max-width: 850px;
+
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -0.055em;
+}
+
+.research > .overline,
+.section-heading .overline,
+.about .overline {
+  margin-bottom: 18px;
+}
+
+/* AREE DI RICERCA */
+
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+
+  margin-top: 48px;
+}
+
+.research-card {
+  position: relative;
+
+  min-height: 215px;
+  padding: 30px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(90, 140, 255, 0.055),
+      transparent 65%
+    ),
+    var(--bg-secondary);
+
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.research-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  background-color: var(--surface);
+}
+
+.card-number {
+  display: inline-block;
+  margin-bottom: 26px;
+
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.research-card h3 {
+  margin-bottom: 12px;
+
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.research-card p {
+  max-width: 470px;
+
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+/* PUBBLICAZIONI */
+
+.publications {
+  border-top: 1px solid var(--border);
+}
+
+.section-heading > p:last-child {
+  margin-top: 18px;
+  color: var(--muted);
+}
+
+.publication-list {
+  margin-top: 45px;
+  border-top: 1px solid var(--border);
+}
+
+.publication {
+  padding: 34px 24px;
+
+  border-bottom: 1px solid var(--border);
+  border-left: 2px solid transparent;
+
+  transition:
+    background var(--transition),
+    border-color var(--transition);
+}
+
+.publication:hover {
+  border-left-color: var(--accent);
+  background: rgba(90, 140, 255, 0.035);
+}
+
+.publication-category {
+  margin-bottom: 13px;
+
+  color: var(--accent-bright);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.publication h3 {
+  max-width: 850px;
+  margin-bottom: 14px;
+
+  font-family: var(--font-editorial);
+  font-size: clamp(1.45rem, 3vw, 2.15rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+}
+
+.publication > p:not(.publication-category) {
+  max-width: 760px;
+
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.8;
+}
+
+.publication > a {
+  display: inline-flex;
+  margin-top: 21px;
+
+  color: var(--accent-bright);
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+
+.publication > a:hover,
+.all-publications:hover,
+.about > a:hover {
+  text-decoration: underline;
+}
+
+.all-publications {
+  display: inline-flex;
+  margin-top: 32px;
+
+  color: var(--accent-bright);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ABOUT */
+
+.about {
+  position: relative;
+  overflow: hidden;
+
+  padding: 100px 24px;
+  text-align: center;
+
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(90, 140, 255, 0.11),
+      transparent 65%
+    ),
+    var(--bg-secondary);
+}
+
+.about .overline {
+  justify-content: center;
+}
+
+.about h2 {
+  margin: 0 auto 25px;
+}
+
+.about > p:not(.overline) {
+  max-width: 720px;
+  margin: 0 auto;
+
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.95;
+}
+
+.about > a {
+  display: inline-flex;
+  margin-top: 30px;
+
+  color: var(--accent-bright);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* FOOTER */
+
+.site-footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 38px 32px;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.footer-brand {
+  color: var(--text);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.site-footer > a:not(.footer-brand) {
+  color: var(--accent-bright);
+}
+
+.copyright {
+  margin-left: auto;
+}
+
+/* ANIMAZIONI */
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero > * {
+  animation: fade-up 650ms ease both;
+}
+
+.hero > :nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.hero > :nth-child(3) {
+  animation-delay: 140ms;
+}
+
+.hero > :nth-child(4) {
+  animation-delay: 200ms;
+}
+
+.hero > :nth-child(5) {
+  animation-delay: 260ms;
+}
+
+.hero > :nth-child(6) {
+  animation-delay: 320ms;
+}
+
+/* TABLET */
+
+@media (max-width: 850px) {
+  .site-header {
+    gap: 18px;
+  }
+
+  .site-header nav {
+    gap: 18px;
+  }
+
+  .hero {
+    min-height: 560px;
+    padding-top: 100px;
+    padding-bottom: 90px;
+  }
+
+  .hero::before {
+    right: 0;
+    width: 250px;
+    height: 250px;
+    opacity: 0.65;
+  }
+
+  .research,
+  .publications {
+    padding-top: 75px;
+    padding-bottom: 75px;
+  }
+}
+
+/* SMARTPHONE */
+
+@media (max-width: 600px) {
+  :root {
+    --header-height: 68px;
+  }
+
+  .site-header {
+    min-height: var(--header-height);
+    padding: 12px 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .brand {
+    gap: 9px;
+    font-size: 0.9rem;
+  }
+
+  .brand-symbol {
+    width: 32px;
+    height: 32px;
+  }
+
+  .site-header nav {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 25px;
+
+    padding: 10px 0 3px;
+    border-top: 1px solid var(--border);
+  }
+
+  .site-header nav a {
+    font-size: 0.78rem;
+  }
+
+  .medium-link {
+    padding: 7px 10px;
+    font-size: 0.76rem;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 90px 22px 80px;
+  }
+
+  .hero::before {
+    top: 55px;
+    right: -120px;
+    width: 220px;
+    height: 220px;
+    opacity: 0.45;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.2rem, 14vw, 5rem);
+    overflow-wrap: anywhere;
+  }
+
+  .hero h2 {
+    margin-top: 20px;
+    font-size: 1rem;
+  }
+
+  .hero-description {
+    font-size: 0.96rem;
+  }
+
+  .hero-tags {
+    gap: 8px;
+  }
+
+  .hero-tags span {
+    font-size: 0.69rem;
+  }
+
+  .hero-actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .button-primary,
+  .button-secondary {
+    width: 100%;
+  }
+
+  .research,
+  .publications {
+    padding: 70px 20px;
+  }
+
+  .research-grid {
+    grid-template-columns: 1fr;
+    gap: 13px;
+    margin-top: 32px;
+  }
+
+  .research-card {
+    min-height: auto;
+    padding: 25px;
+  }
+
+  .card-number {
+    margin-bottom: 17px;
+  }
+
+  .publication {
+    padding: 28px 15px;
+  }
+
+  .publication h3 {
+    font-size: 1.5rem;
+  }
+
+  .about {
+    padding: 75px 22px;
+  }
+
+  .site-footer {
+    padding: 30px 22px;
+    gap: 16px;
+  }
+
+  .site-footer p {
+    width: 100%;
+  }
+
+  .copyright {
+    margin-left: 0;
+  }
+}
+
+/* ACCESSIBILITÀ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+.load-more {
+  display: block;
+  margin: 32px auto;
+  padding: 12px 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 220ms ease, border-color 220ms ease;
+}
+
+.load-more:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.load-more[hidden] {
+  display: none;
+}
+
+.publication.is-hidden {
+  display: none;
+}
+
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGAZIONE -->
+
+  <header class="site-header">
+    <a href="#home" class="brand">
+      <span class="brand-symbol">A</span>
+      <span>AUF<span class="brand-muted">2026</span></span>
+    </a>
+
+    <nav aria-label="Navigazione principale">
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <a
+      class="medium-link"
+      href="https://medium.com/@auf2026"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Medium ↗
+    </a>
+  </header>
+
+
+  <main id="home">
+
+    <!-- PROFILO PERSONALE -->
+
+    <section class="hero">
+
+      <p class="overline">
+        AUF2026 · SINGLEPOINT MIND
+      </p>
+
+      <h1>
+        Alain Faure<span class="accent">.</span>
+      </h1>
+
+      <h2>
+        Master Architect · AUF2026 Kernel
+      </h2>
+
+      <p class="hero-description">
+        Independent research across mathematical structures,
+        deterministic systems, theoretical physics and
+        computational architecture.
+      </p>
+
+      <div class="hero-tags">
+        <span>Faure Framework</span>
+        <span>AOS Kernel</span>
+        <span>Deterministic Systems</span>
+      </div>
+
+      <div class="hero-actions">
+        <a href="#publications" class="button-primary">
+          Explore publications →
+        </a>
+
+        <a
+          href="https://medium.com/@auf2026"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="button-secondary"
+        >
+          Read on Medium ↗
+        </a>
+      </div>
+
+    </section>
+
+
+    <!-- AREE DI RICERCA -->
+
+    <section id="research" class="research">
+
+      <p class="overline">RESEARCH DOMAINS</p>
+
+      <h2>Structure. Mathematics. Computation.</h2>
+
+      <div class="research-grid">
+
+        <article class="research-card">
+          <span class="card-number">01</span>
+          <h3>Faure Framework</h3>
+          <p>
+            Mathematical structures, invariance and
+            the proposed universal relational framework.
+          </p>
+        </article>
+
+        <article class="research-card">
+          <span class="card-number">02</span>
+          <h3>AOS Kernel</h3>
+          <p>
+            Computational architecture, lattice models
+            and deterministic implementations.
+          </p>
+        </article>
+
+        <article class="research-card">
+          <span class="card-number">03</span>
+          <h3>Theoretical Physics</h3>
+          <p>
+            Research and hypotheses concerning mathematical
+            structures underlying physical phenomena.
+          </p>
+        </article>
+
+        <article class="research-card">
+          <span class="card-number">04</span>
+          <h3>Cryptography</h3>
+          <p>
+            Computational security, information theory
+            and algorithmic architectures.
+          </p>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- PUBBLICAZIONI REALI -->
+
+    <section id="publications" class="publications">
+
+      <div class="section-heading">
+        <p class="overline">SELECTED PUBLICATIONS</p>
+        <h2>Published on Medium.</h2>
+        <p>
+          Articoli selezionati dal profilo @auf2026.
+        </p><button id="loadMoreBtn" class="load-more">
+  Load more publications ↓
+</button>
+      </div>
+
+      <div id="articleList" class="publication-list">
+
+        <article class="publication">
+          <p class="publication-category">
+            QUANTUM PHYSICS · MATHEMATICS
+          </p>
+
+          <h3>
+            Deriving Born’s Rule Without Quantum Mechanics:
+            The End of Wave Function Probability
+          </h3>
+
+          <p>
+            The Faure Tuple, relational structures
+            and the proposed deterministic framework.
+          </p>
+
+          <a
+            href="https://medium.com/@auf2026/deriving-borns-rule-without-quantum-mechanics-the-end-of-wave-function-probabilitywhy-the-future-7ded356aed7d"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read original article ↗
+          </a>
+        </article>
+
+        <article class="publication">
+          <p class="publication-category">
+            MATHEMATICS · INFORMATION THEORY
+          </p>
+
+          <h3>
+            Beyond the Universe’s Source Code:
+            The Faure Framework and the Secret of the 144 Lattice
+          </h3>
+
+          <p>
+            The AOS Kernel, lattice structures
+            and the proposed informational model.
+          </p>
+
+          <a
+            href="https://medium.com/@auf2026/beyond-the-universes-source-code-the-faure-framework-and-the-secret-of-the-144-lattice-4294dfc99191"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read original article ↗
+          </a>
+        </article>
+
+        <article class="publication">
+          <p class="publication-category">
+            PHYSICS · COMPUTATION
+          </p>
+
+          <h3>
+            The Faure Theory of Everything:
+            AUF2026 Kernel and Universal Invariance
+          </h3>
+
+          <p>
+            An overview of the proposed framework,
+            its computational architecture and invariance claims.
+          </p>
+
+          <a
+            href="https://medium.com/@auf2026/the-faure-theory-of-everything-auf2026-kernel-and-universal-invariance-ebcc7bd58305"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Read original article ↗
+          </a>
+        </article>
+
+      </div>
+
+      <a
+        href="https://medium.com/@auf2026"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="all-publications"
+      >
+        View profile and all publications on Medium ↗
+      </a>
+
+    </section>
+
+
+    <!-- IDENTITÀ -->
+
+    <section id="about" class="about">
+
+      <p class="overline">ABOUT THE AUTHOR</p>
+
+      <h2>Singlepoint Mind.</h2>
+
+      <p>
+        Alain Faure — Master Architect, creatore del progetto
+        AUF2026 e autore di contenuti dedicati a strutture
+        matematiche, architetture computazionali e modelli
+        teorici deterministici.
+      </p>
+
+      <a
+        href="https://medium.com/@auf2026"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Follow the publications on Medium ↗
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer class="site-footer">
+    <a href="#home" class="footer-brand">AUF2026</a>
+
+    <p>
+      Alain Faure · Singlepoint Mind
+    </p>
+
+    <a
+      href="https://medium.com/@auf2026"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Medium ↗
+    </a>
+
+    <p class="copyright">
+      © 2026 AUF2026
+    </p>
+  </footer>
+
+
+  <script>
+    /* PARTE 3: JAVASCRIPT AUF2026 */
+  </script>
+
+</body>
+</html>
