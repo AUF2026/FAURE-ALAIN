@@ -1162,7 +1162,82 @@ img {
 
 
   <script>
-    /* PARTE 3: JAVASCRIPT AUF2026 */
+    /* ==========================================
+   AUF2026 — LOAD MORE PUBLICATIONS
+========================================== */
+
+(() => {
+  const list = document.getElementById("articleList");
+  const button = document.getElementById("loadMoreBtn");
+
+  if (!list || !button) return;
+
+  // Articoli già presenti nell'HTML.
+  const initialArticles = Array.from(
+    list.querySelectorAll(".publication")
+  );
+
+  // Archivio aggiuntivo: inserisci qui gli altri articoli REALI.
+  const moreArticles = [
+    // Esempio:
+    // {
+    //   category: "MATHEMATICS · COMPUTATION",
+    //   title: "Titolo del tuo articolo",
+    //   description: "Descrizione del tuo articolo.",
+    //   url: "https://medium.com/@auf2026/URL-REALE"
+    // }
+  ];
+
+  const batchSize = 3;
+  let nextIndex = 0;
+
+  function createCard(article) {
+    const card = document.createElement("article");
+    card.className = "publication";
+
+    const category = document.createElement("p");
+    category.className = "publication-category";
+    category.textContent = article.category;
+
+    const title = document.createElement("h3");
+    title.textContent = article.title;
+
+    const description = document.createElement("p");
+    description.textContent = article.description;
+
+    const link = document.createElement("a");
+    link.href = article.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Read original article ↗";
+
+    card.append(category, title, description, link);
+
+    return card;
+  }
+
+  function loadMore() {
+    const batch = moreArticles.slice(
+      nextIndex,
+      nextIndex + batchSize
+    );
+
+    batch.forEach(article => {
+      list.appendChild(createCard(article));
+    });
+
+    nextIndex += batch.length;
+
+    // Nascondi il pulsante quando non restano articoli.
+    button.hidden = nextIndex >= moreArticles.length;
+  }
+
+  // Mostra il pulsante solo se esistono articoli aggiuntivi.
+  button.hidden = moreArticles.length === 0;
+
+  button.addEventListener("click", loadMore);
+})();
+
   </script>
 
 </body>
