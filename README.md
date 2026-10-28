@@ -77,7 +77,7 @@ Ideas are not static objects. They are structures to explore, question, test, an
 
 This page evolves alongside my work. Personal theses and interpretations may change, expand, or be revised. The purpose is to document the process, preserve the ideas, and make the resulting work accessible.
 
-🇬🇧 ENGLISH
+# 🇬🇧 ENGLISH
 About
 
 I use this space to develop and present my own ideas, personal theses, and reflections. It is connected to AUF2026 and my Medium profile, while retaining its own identity as a personal page.
@@ -86,7 +86,7 @@ The subjects I explore may include mathematical structures, theoretical physics,
 
 The content represents my perspective and ongoing work. Its presence here does not, by itself, imply independent scientific validation.
 
-🇮🇹 ITALIANO
+# 🇮🇹 ITALIANO
 La mia pagina personale
 
 Utilizzo questo spazio per sviluppare e presentare le mie idee, le mie tesi personali e le mie riflessioni. È collegato ad AUF2026 e al mio profilo Medium, mantenendo una propria identità come pagina personale.
